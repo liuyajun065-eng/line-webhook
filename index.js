@@ -1,11 +1,38 @@
 const express = require('express')
+const axios = require('axios')
 const app = express()
 
 app.use(express.json())
 
-app.post('/webhook', (req, res) => {
-  console.log('Received event:', req.body)
-  res.sendStatus(200)
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbw5RGqYUcX1zWHZbo3EgGLntTrZakguodNCqJNX7625nkjtezGtISpcscFhx13Bk3zQ/exec'  // ←改成GAS網址
+
+app.post('/webhook', async (req, res) => {
+  try {
+    const events = req.body.events
+    if (!events || events.length === 0) return res.sendStatus(200)
+
+    for (const event of events) {
+      if (event.type === 'message' && event.message.type === 'text') {
+        const userMessage = event.message.text
+        const userId = event.source.userId
+        const timestamp = new Date().toISOString()
+
+        // 呼叫 GAS，把資料傳過去
+        await axios.post(GAS_URL, {
+          userId: userId,
+          message: userMessage,
+          timestamp: timestamp
+        })
+
+        console.log(`✅ 已送出到 GAS：${userId} - ${userMessage}`)
+      }
+    }
+
+    res.sendStatus(200)
+  } catch (error) {
+    console.error('❌ Error sending to GAS:', error)
+    res.sendStatus(500)
+  }
 })
 
 app.get('/', (req, res) => {
