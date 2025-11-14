@@ -4,7 +4,7 @@ const app = express()
 
 app.use(express.json())
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbw5RGqYUcX1zWHZbo3EgGLntTrZakguodNCqJNX7625nkjtezGtISpcscFhx13Bk3zQ/exec'  // ←改成GAS網址
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwcpaQUHP9nf49QXrxVffHJCJ3Xxc5cwasIi9Hq0wM5oGWaFTLvPvBgWDTiUeTzpFZH/exec'  // ←改成GAS網址
 
 app.post('/webhook', async (req, res) => {
   try {
@@ -48,5 +48,6 @@ const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
 })
+
 
 
