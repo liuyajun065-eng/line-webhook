@@ -18,11 +18,16 @@ app.post('/webhook', async (req, res) => {
         const timestamp = new Date().toISOString()
 
         // 呼叫 GAS，把資料傳過去
-        await axios.post(GAS_URL, {
-          userId: userId,
-          message: userMessage,
-          timestamp: timestamp
-        })
+        await axios.post(GAS_URL, 
+  {
+    userId: userId,
+    message: userMessage,
+    timestamp: timestamp
+  },
+  {
+    headers: { "Content-Type": "application/json" }
+  }
+)
 
         console.log(`✅ 已送出到 GAS：${userId} - ${userMessage}`)
       }
@@ -43,4 +48,5 @@ const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
 })
+
 
